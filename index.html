@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebSocket Terminal</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      margin: 0;
+      padding: 20px;
+      background-color: #222;
+      color: #00ff00;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      max-width: 800px;
+      background: rgba(0, 0, 0, 0.9);
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      width: 100%;
+      position: relative;
+    }
+    h1 {
+      text-align: center;
+      color: #00ff00;
+    }
+    #terminal {
+      height: 400px;
+      width: 100%;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      font-size: 18px;
+      margin-bottom: 10px;
+      background: #000;
+      color: #00ff00;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    #loading {
+      display: none;
+      color: #00ff00;
+    }
+    #controls {
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    #command {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #00ff00;
+      border-radius: 5px;
+      background: #333;
+      color: #fff;
+    }
+    button {
+      padding: 10px;
+      background-color: #00ff00;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    button:hover {
+      background-color: #00cc00;
+    }
+    .menu {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .menu a {
+      color: #00ff00;
+      margin: 0 15px;
+      text-decoration: none;
+    }
+    .menu a:hover {
+      text-decoration: underline;
+    }
+    .social-icons {
+      display: none;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    .social-icons a {
+      margin: 0 10px;
+      color: #00ff00;
+      text-decoration: none;
+    }
+    .social-icons img {
+      width: 24px;
+      height: 24px;
+    }
+    .hidden {
+      display: none;
+    }
+    footer {
+      color: #00ff00;
+      font-size: 14px;
+      text-align: center;
+      margin-top: 10px;
+    }
+    .blinking-cursor {
+      display: inline-block;
+      width: 10px;
+      height: 18px;
+      background-color: #00ff00;
+      animation: blink 1s infinite;
+      vertical-align: middle;
+    }
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+    .error-message {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>WebSocket Terminal</h1>
+    <div id="terminal"></div>
+    <div id="loading">Loading...</div>
+    <div id="controls">
+      <input type="text" id="command" placeholder="Type your command here..." autofocus>
+      <button id="executeBtn">Execute</button>
+      <button id="clearBtn">Clear</button>
+    </div>
+    <div class="menu">
+      <a href="#contact" id="contactBtn">Contact</a>
+      <a href="#help" id="helpBtn">Help</a>
+    </div>
+    <div class="social-icons" id="socialIcons">
+      <a href="https://github.com/Amchapeey" target="_blank">
+        <img src="github.png" alt="GitHub">
+      </a>
+      <a href="https://x.com/iamchapeey" target="_blank">
+        <img src="x.png" alt="Twitter">
+      </a>
+      <a href="https://t.me/chapeey" target="_blank">
+        <img src="telegram.png" alt="Telegram">
+      </a>
+    </div>
+    <div id="documentation" class="hidden">
+      <h2>Documentation</h2>
+      <p>Use this terminal to interact with our WebSocket Server. Available commands:</p>
+      <ul>
+        <li><strong>connect</strong>: Connect to the server</li>
+        <li><strong>fetch</strong>: Fetch data from the server</li>
+        <li><strong>execute</strong>: Execute a command on the server</li>
+        <li><strong>clear</strong>: Clear the terminal</li>
+        <li><strong>help</strong>: Show help information</li>
+      </ul>
+    </div>
+    <footer>
+      Powered by Chapeey © 2024
+    </footer>
+  </div>
+
+  <script>
+    const terminal = document.getElementById('terminal');
+    const commandInput = document.getElementById('command');
+    const executeBtn = document.getElementById('executeBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const loadingIndicator = document.getElementById('loading');
+    const contactBtn = document.getElementById('contactBtn');
+    const socialIcons = document.getElementById('socialIcons');
+    const helpBtn = document.getElementById('helpBtn');
+    const documentation = document.getElementById('documentation');
+
+    let commandHistory = [];
+    let historyIndex = -1;
+
+    // Establish WebSocket connection
+    const socket = new WebSocket('ws://' + window.location.host);
+
+    socket.addEventListener('open', () => {
+      console.log('Connected to WebSocket server.');
+    });
+
+    socket.addEventListener('message', (event) => {
+      // Append the server response to the terminal
+      terminal.innerHTML += `<br/>${event.data}`;
+      toggleLoading(false);
+      appendCursor();
+    });
+
+    // Append blinking cursor to the terminal
+    function appendCursor() {
+      const cursor = document.createElement('div');
+      cursor.classList.add('blinking-cursor');
+      terminal.appendChild(cursor);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    // Remove any existing blinking cursor
+    function removeBlinkingCursor() {
+      const cursor = document.querySelector('.blinking-cursor');
+      if (cursor) {
+        cursor.remove();
+      }
+    }
+
+    // Toggle loading indicator
+    function toggleLoading(show) {
+      loadingIndicator.style.display = show ? 'block' : 'none';
+    }
+
+    // Send command either locally or to the backend via WebSocket
+    function executeCommand(command) {
+      terminal.innerHTML += `<br/> > ${command}`;
+      commandHistory.push(command);
+      historyIndex = commandHistory.length;
+      removeBlinkingCursor();
+
+      if (command === 'clear') {
+        terminal.innerHTML = '';
+        return;
+      } else if (command === 'help') {
+        documentation.classList.toggle('hidden');
+        appendCursor();
+        return;
+      }
+      
+      // Show loading indicator and send the command to the server
+      toggleLoading(true);
+      socket.send(command);
+    }
+
+    executeBtn.addEventListener('click', () => {
+      const command = commandInput.value.trim();
+      if (command) {
+        executeCommand(command);
+        commandInput.value = '';
+      }
+    });
+
+    commandInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        const command = commandInput.value.trim();
+        if (command) {
+          executeCommand(command);
+          commandInput.value = '';
+        }
+      } else if (event.key === 'ArrowUp') {
+        if (historyIndex > 0) {
+          historyIndex--;
+          commandInput.value = commandHistory[historyIndex] || '';
+        }
+      } else if (event.key === 'ArrowDown') {
+        if (historyIndex < commandHistory.length - 1) {
+          historyIndex++;
+          commandInput.value = commandHistory[historyIndex] || '';
+        }
+      }
+    });
+
+    clearBtn.addEventListener('click', () => {
+      terminal.innerHTML = '';
+    });
+
+    helpBtn.addEventListener('click', () => {
+      documentation.classList.toggle('hidden');
+    });
+
+    contactBtn.addEventListener('click', () => {
+      socialIcons.style.display = (socialIcons.style.display === 'flex') ? 'none' : 'flex';
+    });
+
+    // Type out welcome message on load
+    function typeText(text, callback) {
+      let index = 0;
+      function type() {
+        if (index < text.length) {
+          terminal.innerHTML += text.charAt(index);
+          index++;
+          terminal.scrollTop = terminal.scrollHeight;
+          setTimeout(type, 50);
+        } else {
+          if (callback) callback();
+        }
+      }
+      type();
+    }
+
+    commandInput.focus();
+    typeText("Welcome to the WebSocket Terminal! Type \"help\" for a list of commands.", () => {
+      appendCursor();
+    });
+  </script>
+</body>
+  </html>
