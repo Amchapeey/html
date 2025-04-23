@@ -1,0 +1,255 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>chapeey.network :: [v3.6.0]</title>
+  <!-- xterm.js and Fit addon -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/css/xterm.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/lib/xterm.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0.10.0/lib/addon-fit.min.js"></script>
+  <style>
+    :root {
+      --color-primary: #00CCFF;
+      --color-secondary: #002233;
+      --color-alert: #FF3300;
+      --color-bg: #001F2D;
+      --color-text: #E0E0E0;
+      --color-termbg: rgba(0,31,45,0.95);
+      --font-mono: 'Fira Code', monospace;
+      --radius: 8px;
+      --transition-fast: 0.2s ease;
+    }
+    [data-theme="light"] {
+      --color-primary: #005F73;
+      --color-secondary: #A8DADC;
+      --color-alert: #E63946;
+      --color-bg: #F0F3F4;
+      --color-text: #333333;
+      --color-termbg: rgba(240,243,244,0.95);
+    }
+    /* reset & body */
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 2rem;
+      font-family: var(--font-mono);
+      background: var(--color-bg);
+      color: var(--color-primary);
+      transition: background var(--transition-fast), color var(--transition-fast);
+    }
+    /* terminal wrapper */
+    .terminal {
+      max-width: 900px; margin: auto;
+      background: var(--color-termbg);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .terminal__header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1rem; background: var(--color-secondary);
+    }
+    .terminal__status {
+      width:12px; height:12px; background: var(--color-primary);
+      border-radius:50%; animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+    .terminal__title { font-size:0.9rem; }
+    .terminal__controls { display:flex; gap:0.5rem; }
+    .ctrl-btn {
+      background:none; border:none; font-size:1.1rem; cursor:pointer;
+      opacity:0.8; transition:opacity var(--transition-fast);
+    }
+    .ctrl-btn:hover { opacity:1; }
+    .ctrl-btn--alert { color: var(--color-alert); }
+    .ctrl-btn--newtab { font-size:1.5rem; }
+    #clock { font-size:0.9rem; color: var(--color-text); }
+    /* hide command input when collapsed */
+    .terminal__input.hidden { display: none; }
+    /* body & ASCII */
+    .terminal__body {
+      position: relative;
+      display: flex; flex-direction: column;
+      padding:1.5rem; gap:1rem; flex:1;
+    }
+    .ascii-art {
+      font-size:0.75rem; color: var(--color-text);
+      text-align:center; user-select:none;
+    }
+    /* service table */
+    .table-wrapper { overflow-x:auto; }
+    .service-table {
+      width:100%; border-collapse:collapse;
+    }
+    .service-table th, .service-table td {
+      padding:0.75rem; text-align:left; font-size:0.9rem;
+      border-bottom:1px solid var(--color-secondary);
+    }
+    .progress-bar {
+      width:100%; height:10px; background:#444;
+      border-radius:var(--radius); overflow:hidden;
+    }
+    .progress-bar__fill {
+      height:100%; background:var(--color-primary);
+      width: var(--progress,0%); transition:width 0.3s ease;
+    }
+    .status-operational { color:limegreen; }
+    .status-configuring { color:gold; }
+    .status-active      { color:cyan; }
+    /* xterm container grows to fill */
+    #terminal-container { flex:1; }
+    /* stats panel inside terminal body */
+    .stats-panel {
+      position:absolute; bottom:1rem; right:1rem;
+      background:rgba(0,0,0,0.6); padding:0.5rem 1rem;
+      border-radius:4px; font-size:0.85rem;
+      color: var(--color-text); backdrop-filter:blur(4px);
+      z-index: 10; max-width:100%; box-sizing:border-box;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .stats-panel.hidden { display:none; }
+    /* help overlay */
+    .man-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,0.8);
+      display:none; align-items:center; justify-content:center;
+      color:#fff; padding:2rem;
+    }
+    .man-overlay.active { display:flex; }
+    .man-content {
+      background: var(--color-termbg);
+      padding:1rem; border-radius:8px;
+      max-width:600px; max-height:80vh; overflow-y:auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal" data-theme>
+    <header class="terminal__header">
+      <div class="terminal__status"></div>
+      <div class="terminal__title">chapeey-network · SSH · 80×24</div>
+      <div id="clock"></div>
+      <div class="terminal__controls">
+        <button id="new-tab-btn" class="ctrl-btn ctrl-btn--newtab">＋</button>
+        <button id="theme-toggle" class="ctrl-btn">🌓</button>
+        <button id="help-btn" class="ctrl-btn">❔</button>
+        <button id="disconnect-btn" class="ctrl-btn ctrl-btn--alert">■</button>
+      </div>
+    </header>
+    <main class="terminal__body">
+      <pre class="ascii-art">
+____ _   _    _    ____ ____ ____ __     __/ | | | |  / \  |  _ \ |  _ \ \   / / | |   | || | / _ \ | |) | || | | |\ \ / / | ||  _  |/ ___ |  __/|| | || | \ V / || |//   |   () |/   _/ C H A P E E Y </pre> <div class="table-wrapper"> <table class="service-table"> <thead> <tr><th>Service</th><th>Progress</th><th>Status</th></tr> </thead> <tbody> <tr><td>PROXY SERVICE</td><td><div class="progress-bar"><div class="progress-bar__fill" style="--progress:100%"></div></div></td><td class="status-operational">OPERATIONAL (100%)</td></tr> <tr><td>SSL/TLS</td><td><div class="progress-bar"><div class="progress-bar__fill" style="--progress:60%"></div></div></td><td class="status-configuring">CONFIGURING (60%)</td></tr> <tr><td>FIREWALL</td><td><div class="progress-bar"><div class="progress-bar__fill" style="--progress:80%"></div></div></td><td class="status-active">ACTIVE (80%)</td></tr> </tbody> </table> </div> <div class="terminal__input" id="terminal-input"> <div id="terminal-container"></div> </div> <div class="stats-panel hidden" id="stats-panel"> ▲ <span id="upload-speed">0</span> KB/s  ▼ <span id="download-speed">0</span> KB/s  | CPU: <span id="cpu-usage">0%</span> | RAM: <span id="ram-usage">0%</span> </div> </main>
+
+  </div>
+  <div class="man-overlay" id="man-overlay">
+    <div class="man-content">
+      <h2>Help: Available Commands</h2>
+      <ul>
+        <li><strong>help</strong> — show this manual</li>
+        <li><strong>date</strong> — display current date & time</li>
+        <li><strong>clear</strong> — clear console</li>
+        <li><strong>fetch</strong> — redirect to a URL</li>
+        <li><strong>stats</strong> — toggle stats panel</li>
+        <li><strong>history</strong> — show command history</li>
+        <li><strong>ls</strong> — list mock files</li>
+        <li><strong>cd</strong> — change mock directory</li>
+        <li><strong>cat &lt;file&gt;</strong> — view mock file</li>
+        <li><strong>echo &lt;text&gt;</strong> — echo input</li>
+        <li><strong>uptime</strong> — show system uptime</li>
+        <li><strong>exit</strong> — close terminal</li>
+      </ul>
+      <button id="close-man-btn">Close</button>
+    </div>
+  </div>
+  <script>
+    // Theme toggling
+    const rootEl = document.documentElement;
+    const themeKey = 'chapeey_theme';
+    const saved = localStorage.getItem(themeKey);
+    applyTheme(saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? '' : 'light'));
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const next = rootEl.hasAttribute('data-theme') ? '' : 'light';
+      applyTheme(next);
+      localStorage.setItem(themeKey, next);
+    });
+    function applyTheme(t) {
+      if (t === 'light') rootEl.setAttribute('data-theme','light');
+      else rootEl.removeAttribute('data-theme');
+    }
+    // Clock
+    function updateClock() {
+      document.getElementById('clock').textContent = new Date().toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+    // Stats
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function updateStats() {
+      document.getElementById('upload-speed').textContent = rand(256,1280);
+      document.getElementById('download-speed').textContent = rand(512,2560);
+      document.getElementById('cpu-usage').textContent = rand(1,30) + '%';
+      document.getElementById('ram-usage').textContent = rand(20,80) + '%';
+    }
+    setInterval(updateStats, 2000);
+    updateStats();
+    // Overlays & Controls
+    const manOverlay = document.getElementById('man-overlay');
+    document.getElementById('help-btn').addEventListener('click', () => manOverlay.classList.add('active'));
+    document.getElementById('close-man-btn').addEventListener('click', () => manOverlay.classList.remove('active'));
+    document.getElementById('new-tab-btn').addEventListener('click', () => document.getElementById('terminal-input').classList.toggle('hidden'));
+    document.getElementById('disconnect-btn').addEventListener('click', () => { term.writeln('\r\nDisconnected.'); term.dispose(); });
+    // Xterm setup
+    const term = new Terminal({ cursorBlink: true });
+    const fitAddon = new FitAddon.FitAddon();
+    term.loadAddon(fitAddon);
+    term.open(document.getElementById('terminal-container'));
+    fitAddon.fit();
+    term.focus();
+    window.addEventListener('resize', () => fitAddon.fit());
+    // Command handling
+    const cmds = ['help','date','clear','fetch','stats','history','ls','cd','cat','echo','uptime','exit'];
+    const files = ['readme.txt','config.json','secret.key'];
+    let history = [], histIdx = 0, buffer = '';
+    term.write('Welcome to CHAPEEY v3.6.0'); term.write('\r\n$ ');
+    term.onData(e => {
+      switch (e) {
+        case '\r':
+          runCommand(buffer.trim()); history.push(buffer.trim()); histIdx=history.length; buffer=''; term.write('\r\n$ ');
+          break;
+        case '\u007F':
+          if (buffer.length) { buffer=buffer.slice(0,-1); term.write('\b \b'); }
+          break;
+        default:
+          if (e.charCodeAt(0)>=32 && e.charCodeAt(0)<=126) { buffer+=e; term.write(e); }
+      }
+    });
+    function runCommand(cmd) {
+      if (!cmd) return;
+      const [c, ...args] = cmd.split(' ');
+      switch (c) {
+        case 'help': manOverlay.classList.add('active'); break;
+        case 'date': term.writeln(new Date().toString()); break;
+        case 'clear': term.clear(); break;
+        case 'fetch':
+          if (!args[0]) { term.writeln('Usage: fetch <url>'); break; }
+          let target = args[0];
+          if (!/^https?:\/\//i.test(target)) target = 'https://' + target;
+          term.writeln(`Redirecting to ${target}...`);
+          window.location.href = target;
+          break;
+        case 'stats': document.getElementById('stats-panel').classList.toggle('hidden'); break;
+        case 'history': history.forEach((h,i) => term.writeln(`${i+1}: ${h}`)); break;
+        case 'ls': files.forEach(f => term.writeln(f)); break;
+        case 'cd': term.writeln('Changed directory to /mock'); break;
+        case 'cat':
+          if (args[0] && files.includes(args[0])) term.writeln(`Contents of ${args[0]}:\n<mock data>`);
+          else term.writeln('Specify a valid file');
+          break;
+        case 'echo': term.writeln(args.join(' ')); break;
+        case 'uptime': term.writeln(`Uptime: ${Math.floor(performance.now()/1000)}s`); break;
+        case 'exit': term.writeln('Disconnected.'); term.dispose(); break;
+        default: term.writeln(`Command not found: ${c}`);
+      }
+    }
+  </script>
+</body>
+</html>
