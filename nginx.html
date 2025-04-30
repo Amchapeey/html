@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapeey Network | Proxy Configuration Successful</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2ECC71;
+      --background: #0A0A0A;
+      --surface: #1A1A1A;
+      --text: #E0E0E0;
+      --muted: #888;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'IBM Plex Mono', 'Consolas', monospace;
+      background-color: var(--background);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .container {
+      background: var(--surface);
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(46, 204, 113, 0.1);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: var(--primary);
+      margin: 0;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .content p, .content ul {
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .content ul {
+      padding-left: 1.2rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .button {
+      background: rgba(46, 204, 113, 0.1);
+      color: var(--primary);
+      padding: 0.75rem 1.4rem;
+      border-radius: 6px;
+      text-decoration: none;
+      border: 1px solid rgba(46, 204, 113, 0.3);
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .button:hover {
+      background: rgba(46, 204, 113, 0.2);
+      transform: translateY(-1px);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    footer a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 0.4; }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 1.5rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="container">
+      <div class="brand">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="var(--primary)" aria-hidden="true">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <h1>CHAPEEY NETWORK</h1>
+      </div>
+
+      <div class="status-indicator" aria-label="Status: Online">
+        <div class="status-dot"></div>
+        <span>Proxy Server Operational</span>
+      </div>
+
+      <div class="content">
+        <p>Your proxy configuration has been successfully deployed and is now active. While basic functionality is enabled, you may need to adjust settings for your specific use case.</p>
+        <p>For optimal performance and security, we recommend:</p>
+        <ul>
+          <li>Reviewing firewall rules</li>
+          <li>Setting up access controls</li>
+          <li>Enabling monitoring</li>
+        </ul>
+      </div>
+
+      <div class="actions">
+        <a href="https://cdn.africangiant.buzz" class="button" target="_blank" rel="noopener">Documentation</a>
+        <a href="mailto:support@chapeey.net" class="button">Contact Support</a>
+        <a href="/dashboard" class="button">Server Dashboard</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2023 Chapeey Network. All rights reserved.<br>
+    <a href="/privacy">Privacy Policy</a> | 
+    <a href="/terms">Terms of Service</a></p>
+  </footer>
+</body>
+</html>
