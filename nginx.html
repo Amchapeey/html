@@ -1,138 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="description" content="Proxy configuration successful for Chapeey Network. Access secure and optimized proxy services." />
-  <meta name="keywords" content="Chapeey Network, proxy configuration, secure proxy, server dashboard" />
-  <title>Chapeey Network | Proxy Configuration Successful</title>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all';">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <title>Chapeey Network | Interactive Pong</title>
   <style>
     :root {
       --primary: #2ECC71;
       --background: #0A0A0A;
       --surface: #1A1A1A;
       --text: #E0E0E0;
-      --muted: #888;
+      --muted: #999;
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
+    /* Light theme overrides */
+    body.light-theme {
+      --background: #FFFFFF;
+      --surface: #F0F0F0;
+      --text: #111111;
+      --muted: #555555;
     }
 
-    body {
-      font-family: 'IBM Plex Mono', 'Consolas', monospace;
-      background-color: var(--background);
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--background);
       color: var(--text);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
-
-    main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
+      overflow: hidden;
     }
 
     .container {
-      background: var(--surface);
-      padding: 2rem;
-      border-radius: 12px;
-      max-width: 700px;
+      display: flex;
+      height: 100%;
       width: 100%;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(46, 204, 113, 0.1);
+    }
+
+    .left-panel, .right-panel {
+      flex: 1;
+      padding: 2rem;
+    }
+
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.5rem;
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 1rem;
-      margin-bottom: 1.5rem;
     }
 
     .brand-icon {
-      width: 40px;
-      height: 40px;
+      width: 40px; height: 40px;
+      fill: var(--primary);
     }
 
-    h1 {
-      font-size: 1.8rem;
-      color: var(--primary);
-      margin: 0;
-    }
+    h1 { font-size: 2rem; }
 
-    .status-indicator {
+    .status {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      margin-bottom: 1.5rem;
+      color: var(--primary);
     }
 
     .status-dot {
-      width: 12px;
-      height: 12px;
+      width: 10px; height: 10px;
       background: var(--primary);
       border-radius: 50%;
       animation: pulse 2s infinite;
     }
 
-    .content p,
-    .content ul {
-      line-height: 1.6;
-      margin-bottom: 1rem;
+    @keyframes pulse {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 0.4; }
     }
 
-    .content ul {
-      padding-left: 1.2rem;
-    }
-
-    .actions {
+    .buttons {
       display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-top: 2rem;
+      flex-direction: column;
+      gap: 0.75rem;
     }
 
     .button {
       background: rgba(46, 204, 113, 0.1);
       color: var(--primary);
-      padding: 0.75rem 1.4rem;
+      border: 1px solid rgba(46, 204, 113, 0.3);
+      padding: 0.75rem 1rem;
       border-radius: 6px;
       text-decoration: none;
-      border: 1px solid rgba(46, 204, 113, 0.3);
-      transition: all 0.2s ease;
-      font-weight: 500;
+      transition: transform 0.2s, background 0.2s;
+      cursor: pointer;
+      text-align: center;
+      user-select: none;
     }
 
     .button:hover {
       background: rgba(46, 204, 113, 0.2);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
     }
 
-    .button:focus {
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
+    .game-wrapper {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    canvas {
+      background: var(--surface);
+      border: 2px solid var(--primary);
+      border-radius: 8px;
+    }
+
+    .overlay {
+      position: absolute;
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.85);
+      padding: 2rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .overlay h2 { margin-bottom: 1rem; }
+
+    .scoreboard {
+      position: absolute;
+      top: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.2rem;
+      color: var(--primary);
     }
 
     footer {
+      position: absolute;
+      bottom: 0.5rem;
+      width: 100%;
       text-align: center;
-      padding: 1.5rem 1rem;
       font-size: 0.9rem;
       color: var(--muted);
     }
@@ -141,80 +151,207 @@
       color: var(--muted);
       text-decoration: none;
     }
-
     footer a:hover {
       text-decoration: underline;
     }
 
-    @keyframes pulse {
-      0%,
-      100% {
-        opacity: 0.8;
-      }
-
-      50% {
-        opacity: 0.4;
-      }
-    }
-
-    @media (max-width: 600px) {
+    /* Mobile & narrow screens */
+    @media (max-width: 768px) {
       .container {
+        flex-direction: column;
+        overflow-y: auto;
+      }
+      .left-panel, .right-panel {
         padding: 1.5rem;
+        width: 100%;
       }
-
-      h1 {
-        font-size: 1.5rem;
+      .right-panel {
+        height: auto;
+        margin-bottom: 2rem;
       }
+      canvas {
+        width: 100% !important;
+        height: auto !important;
+      }
+      .buttons { align-items: stretch; }
+      .button { width: 100%; }
     }
   </style>
 </head>
-
 <body>
-  <header>
-    <div class="brand">
-      <svg class="brand-icon" viewBox="0 0 24 24" fill="var(--primary)" aria-hidden="true" alt="Chapeey Network Logo">
-        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-      </svg>
-      <h1>CHAPEEY NETWORK</h1>
-    </div>
-  </header>
 
-  <main>
-    <div class="container">
-      <div class="status-indicator" aria-label="Status: Online">
+  <div class="container">
+    <div class="left-panel">
+      <div class="brand">
+        <svg class="brand-icon" viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <h1>CHAPEEY NETWORK</h1>
+      </div>
+      <div class="status">
         <div class="status-dot"></div>
         <span>Proxy Server Operational</span>
       </div>
-
-      <section class="content">
-        <p>Your proxy configuration has been successfully deployed and is now active. While basic functionality is enabled, you may need to adjust settings for your specific use case.</p>
-        <p>For optimal performance and security, we recommend:</p>
-        <ul>
-          <li>Reviewing firewall rules</li>
-          <li>Setting up access controls</li>
-          <li>Enabling monitoring</li>
-        </ul>
-      </section>
-
-      <nav class="actions">
-        <a href="https://cdn.africangiant.buzz" class="button" target="_blank" rel="noopener">Documentation</a>
-        <a href="mailto:support@chapeey.net" class="button">Contact Support</a>
+      <div class="buttons">
+        <a href="https://cdn.africangiant.buzz" target="_blank" class="button">Documentation</a>
+        <a href="https://t.me/chapeey" target="_blank" class="button">Telegram Support</a>
         <a href="/dashboard" class="button">Server Dashboard</a>
-      </nav>
+        <div class="button" onclick="startGame()">Play Now</div>
+        <div class="button" onclick="toggleTheme()">Toggle Theme</div>
+        <div class="button" onclick="toggleFullscreen()">Fullscreen</div>
+      </div>
     </div>
-  </main>
+
+    <div class="right-panel game-wrapper">
+      <canvas id="pong" width="400" height="300"></canvas>
+      <div id="overlay" class="overlay">
+        <h2>Ready to Play?</h2>
+        <div class="button" onclick="startGame()">Play Now</div>
+      </div>
+      <div class="scoreboard" id="scoreboard">0 : 0</div>
+    </div>
+  </div>
+
+  <audio id="bounce" src="https://cdn.pixabay.com/audio/2021/08/04/audio_4ff7a7df8a.mp3" preload="auto"></audio>
 
   <footer>
-    <p>© <span id="year"></span> Chapeey Network. All rights reserved.<br>
-      <a href="/privacy">Privacy Policy</a> |
-      <a href="/terms">Terms of Service</a>
-    </p>
+    © <span id="year"></span> Chapeey Network. Built by <a href="#">@chapeey</a>
   </footer>
 
   <script>
-    // Update footer year dynamically
+    // Footer year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Canvas setup
+    const canvas = document.getElementById('pong');
+    const ctx    = canvas.getContext('2d');
+    const overlay    = document.getElementById('overlay');
+    const scoreboard = document.getElementById('scoreboard');
+    const bounceSnd  = document.getElementById('bounce');
+
+    // Game state
+    let gameStarted = false;
+    let playerScore = 0;
+    let aiScore     = 0;
+    const winScore  = 5;
+
+    // Dimensions
+    const paddleW = 10, paddleH = 60;
+    let playerY = canvas.height/2 - paddleH/2;
+    let aiY     = playerY;
+    let ballX, ballY, ballVX, ballVY;
+
+    function resetBall() {
+      ballX = canvas.width/2;
+      ballY = canvas.height/2;
+      ballVX = (Math.random()>0.5?4:-4);
+      ballVY = (Math.random()*4 - 2);
+    }
+
+    function drawRect(x,y,w,h,color){
+      ctx.fillStyle = color;
+      ctx.fillRect(x,y,w,h);
+    }
+    function drawBall(x,y,r,color){
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(x,y,r,0,Math.PI*2);
+      ctx.fill();
+    }
+
+    function draw(){
+      drawRect(0,0,canvas.width,canvas.height,varGet('--surface'));
+      drawRect(5, playerY, paddleW, paddleH, varGet('--primary'));
+      drawRect(canvas.width-15, aiY, paddleW, paddleH, varGet('--primary'));
+      drawBall(ballX, ballY, 6, varGet('--primary'));
+    }
+
+    function update(){
+      ballX += ballVX;
+      ballY += ballVY;
+      // bounce top/bottom
+      if(ballY<0||ballY>canvas.height) {
+        ballVY *= -1;
+        playBounce();
+      }
+      // player paddle
+      if(ballX<15 && ballY>playerY && ballY<playerY+paddleH){
+        ballVX *= -1; playBounce();
+      }
+      // ai paddle
+      if(ballX>canvas.width-20 && ballY>aiY && ballY<aiY+paddleH){
+        ballVX *= -1; playBounce();
+      }
+      // score
+      if(ballX<0){
+        aiScore++; checkWin(); resetBall();
+      }
+      if(ballX>canvas.width){
+        playerScore++; checkWin(); resetBall();
+      }
+      // ai tracking
+      aiY += (ballY - (aiY + paddleH/2)) * 0.06;
+      scoreboard.textContent = `${playerScore} : ${aiScore}`;
+    }
+
+    function checkWin(){
+      if(playerScore>=winScore||aiScore>=winScore){
+        gameStarted = false;
+        overlay.innerHTML = 
+          `<h2>${playerScore>aiScore?"You Win!":"AI Wins!"}</h2>
+           <div class="button" onclick="restartGame()">Play Again</div>`;
+        overlay.style.display = 'block';
+      }
+    }
+
+    function gameLoop(){
+      if(!gameStarted) return;
+      update(); draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    // Helpers
+    function varGet(name){
+      return getComputedStyle(document.body).getPropertyValue(name);
+    }
+    function playBounce(){
+      bounceSnd.currentTime = 0;
+      bounceSnd.play();
+    }
+
+    // Controls
+    canvas.addEventListener('mousemove', e=>{
+      let r = canvas.getBoundingClientRect();
+      playerY = e.clientY - r.top - paddleH/2;
+    });
+    canvas.addEventListener('touchmove', e=>{
+      e.preventDefault();
+      let r = canvas.getBoundingClientRect();
+      playerY = e.touches[0].clientY - r.top - paddleH/2;
+    }, {passive:false});
+
+    function startGame(){
+      playerScore = aiScore = 0;
+      resetBall();
+      overlay.style.display = 'none';
+      gameStarted = true;
+      gameLoop();
+    }
+    function restartGame(){ startGame(); }
+
+    // Theme toggle
+    function toggleTheme(){
+      document.body.classList.toggle('light-theme');
+    }
+
+    // Fullscreen
+    function toggleFullscreen(){
+      if(!document.fullscreenElement){
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
   </script>
 </body>
-
 </html>
