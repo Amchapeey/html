@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="description" content="Proxy configuration successful for Chapeey Network. Access secure and optimized proxy services." />
+  <meta name="keywords" content="Chapeey Network, proxy configuration, secure proxy, server dashboard" />
   <title>Chapeey Network | Proxy Configuration Successful</title>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all';">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <style>
     :root {
       --primary: #2ECC71;
@@ -28,6 +32,13 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
     }
 
     main {
@@ -81,7 +92,8 @@
       animation: pulse 2s infinite;
     }
 
-    .content p, .content ul {
+    .content p,
+    .content ul {
       line-height: 1.6;
       margin-bottom: 1rem;
     }
@@ -113,6 +125,11 @@
       transform: translateY(-1px);
     }
 
+    .button:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
     footer {
       text-align: center;
       padding: 1.5rem 1rem;
@@ -130,8 +147,14 @@
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 0.8; }
-      50% { opacity: 0.4; }
+      0%,
+      100% {
+        opacity: 0.8;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
     }
 
     @media (max-width: 600px) {
@@ -145,22 +168,25 @@
     }
   </style>
 </head>
+
 <body>
+  <header>
+    <div class="brand">
+      <svg class="brand-icon" viewBox="0 0 24 24" fill="var(--primary)" aria-hidden="true" alt="Chapeey Network Logo">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+      </svg>
+      <h1>CHAPEEY NETWORK</h1>
+    </div>
+  </header>
+
   <main>
     <div class="container">
-      <div class="brand">
-        <svg class="brand-icon" viewBox="0 0 24 24" fill="var(--primary)" aria-hidden="true">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-        </svg>
-        <h1>CHAPEEY NETWORK</h1>
-      </div>
-
       <div class="status-indicator" aria-label="Status: Online">
         <div class="status-dot"></div>
         <span>Proxy Server Operational</span>
       </div>
 
-      <div class="content">
+      <section class="content">
         <p>Your proxy configuration has been successfully deployed and is now active. While basic functionality is enabled, you may need to adjust settings for your specific use case.</p>
         <p>For optimal performance and security, we recommend:</p>
         <ul>
@@ -168,20 +194,27 @@
           <li>Setting up access controls</li>
           <li>Enabling monitoring</li>
         </ul>
-      </div>
+      </section>
 
-      <div class="actions">
+      <nav class="actions">
         <a href="https://cdn.africangiant.buzz" class="button" target="_blank" rel="noopener">Documentation</a>
         <a href="mailto:support@chapeey.net" class="button">Contact Support</a>
         <a href="/dashboard" class="button">Server Dashboard</a>
-      </div>
+      </nav>
     </div>
   </main>
 
   <footer>
-    <p>© 2023 Chapeey Network. All rights reserved.<br>
-    <a href="/privacy">Privacy Policy</a> | 
-    <a href="/terms">Terms of Service</a></p>
+    <p>© <span id="year"></span> Chapeey Network. All rights reserved.<br>
+      <a href="/privacy">Privacy Policy</a> |
+      <a href="/terms">Terms of Service</a>
+    </p>
   </footer>
+
+  <script>
+    // Update footer year dynamically
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
+
 </html>
