@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+m<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,173 +12,179 @@
       --text: #E0E0E0;
       --muted: #999;
       --ball: #FF3B3B;
-    }body.light-theme {
-  --background: #FFFFFF;
-  --surface: #F0F0F0;
-  --text: #111111;
-  --muted: #555555;
-  --ball: #C0392B;
-}
+    }
+    body.light-theme {
+      --background: #FFFFFF;
+      --surface: #F0F0F0;
+      --text: #111111;
+      --muted: #555555;
+      --ball: #C0392B;
+    }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body {
-  height: 100%;
-  font-family: 'Segoe UI', sans-serif;
-  background: var(--background);
-  color: var(--text);
-  overflow: hidden;
-}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--background);
+      color: var(--text);
+      overflow: hidden;
+    }
 
-.container {
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-  width: 100%;
-}
+    .container {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      width: 100%;
+    }
 
-.left-panel, .right-panel {
-  flex: 1;
-  padding: 2rem;
-}
+    .left-panel, .right-panel {
+      flex: 1;
+      padding: 2rem;
+    }
 
-.left-panel {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 1.5rem;
-}
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.5rem;
+    }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+    }
 
-.brand-icon {
-  width: 40px;
-  height: 40px;
-  fill: var(--primary);
-}
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      fill: var(--primary);
+      transition: transform 0.6s ease;
+    }
 
-h1 { font-size: 2rem; }
+    .brand-icon.rotate {
+      transform: rotate(360deg);
+    }
 
-.status {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--primary);
-}
+    h1 { font-size: 2rem; }
 
-.status-dot {
-  width: 10px;
-  height: 10px;
-  background: var(--primary);
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary);
+    }
 
-@keyframes pulse {
-  0%, 100% { opacity: 0.8; }
-  50% { opacity: 0.4; }
-}
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
 
-.buttons, .controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
+    @keyframes pulse {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 0.4; }
+    }
 
-.button {
-  background: rgba(46, 204, 113, 0.1);
-  color: var(--primary);
-  border: 1px solid rgba(46, 204, 113, 0.3);
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  text-decoration: none;
-  transition: transform 0.2s, background 0.2s;
-  cursor: pointer;
-  text-align: center;
-  user-select: none;
-  min-width: 120px;
-}
+    .buttons, .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
 
-.button:hover {
-  background: rgba(46, 204, 113, 0.2);
-  transform: translateY(-2px);
-}
+    .button {
+      background: rgba(46, 204, 113, 0.1);
+      color: var(--primary);
+      border: 1px solid rgba(46, 204, 113, 0.3);
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: transform 0.2s, background 0.2s;
+      cursor: pointer;
+      text-align: center;
+      user-select: none;
+      min-width: 120px;
+    }
 
-.game-wrapper {
-  position: relative;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    .button:hover {
+      background: rgba(46, 204, 113, 0.2);
+      transform: translateY(-2px);
+    }
 
-canvas {
-  background: var(--surface);
-  border: 2px solid var(--primary);
-  border-radius: 8px;
-}
+    .game-wrapper {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-.overlay {
-  position: absolute;
-  z-index: 10;
-  background: rgba(0, 0, 0, 0.85);
-  padding: 2rem;
-  border-radius: 8px;
-  text-align: center;
-  color: white;
-}
+    canvas {
+      background: var(--surface);
+      border: 2px solid var(--primary);
+      border-radius: 8px;
+    }
 
-.scoreboard {
-  position: absolute;
-  top: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 1.2rem;
-  color: var(--primary);
-}
+    .overlay {
+      position: absolute;
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.85);
+      padding: 2rem;
+      border-radius: 8px;
+      text-align: center;
+      color: white;
+    }
 
-footer {
-  position: absolute;
-  bottom: 0.5rem;
-  width: 100%;
-  text-align: center;
-  font-size: 0.9rem;
-  color: var(--muted);
-}
+    .scoreboard {
+      position: absolute;
+      top: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.2rem;
+      color: var(--primary);
+    }
 
-footer a {
-  color: var(--muted);
-  text-decoration: none;
-}
-footer a:hover {
-  text-decoration: underline;
-}
+    footer {
+      position: absolute;
+      bottom: 0.5rem;
+      width: 100%;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
 
-@media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-    overflow-y: auto;
-  }
-  .left-panel, .right-panel {
-    padding: 1.5rem;
-    width: 100%;
-  }
-  canvas {
-    width: 100% !important;
-    height: auto !important;
-  }
-}
+    footer a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
 
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        overflow-y: auto;
+      }
+      .left-panel, .right-panel {
+        padding: 1.5rem;
+        width: 100%;
+      }
+      canvas {
+        width: 100% !important;
+        height: auto !important;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="left-panel">
-      <div class="brand">
-        <svg class="brand-icon" viewBox="0 0 24 24">
+      <div class="brand" onclick="rotateLogo()">
+        <svg class="brand-icon" id="logo-icon" viewBox="0 0 24 24">
           <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
         </svg>
         <h1>CHAPEEY NETWORK</h1>
@@ -190,7 +197,7 @@ footer a:hover {
         <a href="https://cdn.africangiant.buzz" target="_blank" class="button">Documentation</a>
         <a href="https://t.me/chapeey" target="_blank" class="button">Telegram Support</a>
         <a href="/dashboard" class="button">Server Dashboard</a>
-        <div class="button" onclick="startGame()">Play Now</div>
+        <div id="playButton" class="button" onclick="togglePlayPause()">Play Now</div>
       </div>
       <div class="controls">
         <div class="button" onclick="toggleTheme()">Toggle Theme</div>
@@ -202,15 +209,19 @@ footer a:hover {
       <canvas id="pong" width="400" height="300"></canvas>
       <div id="overlay" class="overlay">
         <h2>Ready to Play?</h2>
-        <div class="button" onclick="startGame()">Play Now</div>
+        <div class="button" onclick="togglePlayPause()">Play Now</div>
       </div>
       <div class="scoreboard" id="scoreboard">0 : 0</div>
     </div>
-  </div><audio id="bounce" src="https://cdn.pixabay.com/audio/2021/08/04/audio_4ff7a7df8a.mp3" preload="auto"></audio>
+  </div>
+
+  <audio id="bounce" src="https://cdn.pixabay.com/audio/2021/08/04/audio_4ff7a7df8a.mp3" preload="auto"></audio>
 
   <footer>
     © <span id="year"></span> Chapeey Network. Built by <a href="#">@chapeey</a>
-  </footer>  <script>
+  </footer>
+
+  <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
     const canvas = document.getElementById('pong');
@@ -218,8 +229,10 @@ footer a:hover {
     const overlay = document.getElementById('overlay');
     const scoreboard = document.getElementById('scoreboard');
     const bounceSnd = document.getElementById('bounce');
+    const playButton = document.getElementById('playButton');
 
     let gameStarted = false;
+    let gamePaused = false;
     let playerScore = 0, aiScore = 0;
     let difficulty = 0.06;
 
@@ -239,6 +252,7 @@ footer a:hover {
       ctx.fillStyle = color;
       ctx.fillRect(x, y, w, h);
     }
+
     function drawBall(x, y, r, color) {
       ctx.fillStyle = color;
       ctx.beginPath();
@@ -281,14 +295,15 @@ footer a:hover {
     function checkWin() {
       if (playerScore >= 5 || aiScore >= 5) {
         gameStarted = false;
+        playButton.textContent = "Play Now";
         overlay.innerHTML = `<h2>${playerScore > aiScore ? "You Win!" : "AI Wins!"}</h2>
-          <div class='button' onclick='startGame()'>Play Again</div>`;
+          <div class='button' onclick='togglePlayPause()'>Play Again</div>`;
         overlay.style.display = 'block';
       }
     }
 
     function gameLoop() {
-      if (!gameStarted) return;
+      if (!gameStarted || gamePaused) return;
       update(); draw();
       requestAnimationFrame(gameLoop);
     }
@@ -315,11 +330,26 @@ footer a:hover {
       playerY = e.touches[0].clientY - r.top - paddleH / 2;
     }, { passive: false });
 
+    function togglePlayPause() {
+      if (!gameStarted) {
+        startGame();
+        playButton.textContent = "Pause";
+      } else if (!gamePaused) {
+        gamePaused = true;
+        playButton.textContent = "Resume";
+      } else {
+        gamePaused = false;
+        playButton.textContent = "Pause";
+        gameLoop();
+      }
+    }
+
     function startGame() {
       playerScore = aiScore = 0;
+      gameStarted = true;
+      gamePaused = false;
       resetBall();
       overlay.style.display = 'none';
-      gameStarted = true;
       gameLoop();
     }
 
@@ -339,5 +369,12 @@ footer a:hover {
       difficulty = difficulty === 0.06 ? 0.12 : 0.06;
       document.getElementById('diff-label').textContent = difficulty === 0.06 ? 'Easy' : 'Hard';
     }
-  </script></body>
+
+    function rotateLogo() {
+      const logo = document.getElementById('logo-icon');
+      logo.classList.add('rotate');
+      setTimeout(() => logo.classList.remove('rotate'), 600);
+    }
+  </script>
+</body>
 </html>
