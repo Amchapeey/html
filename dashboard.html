@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chapeey VPN Installer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-light: #f9fafb;
+      --bg-dark: #111827;
+      --text-light: #1f2937;
+      --text-dark: #f9fafb;
+      --primary: #3b82f6;
+      --card: #1f2937;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 2rem;
+    }
+
+    h1, h2 {
+      color: var(--primary);
+    }
+
+    .section {
+      margin-bottom: 2rem;
+      background-color: var(--card);
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .btn {
+  background-color: var(--primary);
+  color: white;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  display: inline-block;
+  text-decoration: none;
+  transition: background-color 0.3s ease;  /* smooth transition */
+}
+
+.btn:hover {
+  background-color: #2563eb;
+}
+
+    code, pre {
+      background-color: #0f172a;
+      padding: 1rem;
+      display: block;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: monospace;
+      color: #93c5fd;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: #1e293b;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    nav h1 {
+      font-size: 1.5rem;
+      margin: 0;
+      color: white;
+    }
+
+    nav .menu-toggle {
+      display: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      color: white;
+    }
+
+    nav .nav-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    nav a {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      font-size: 0.9rem;
+      color: #9ca3af;
+    }
+
+    @media (max-width: 768px) {
+      nav .nav-links {
+        display: none;
+        flex-direction: column;
+        background-color: #1e293b;
+        position: absolute;
+        top: 60px;
+        right: 0;
+        width: 200px;
+        padding: 1rem;
+        border-radius: 0 0 0 12px;
+      }
+
+      nav .nav-links.show {
+        display: flex;
+      }
+
+      nav .menu-toggle {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>CHAPEEY NETWORK</h1>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <div class="nav-links" id="navLinks">
+      <a href="#install">Install</a>
+      <a href="#features">Features</a>
+      <a href="#ports">Ports</a>
+      <a href="#cloudflare">Cloudflare</a>
+      <a href="#contact">Contact</a>
+      <a href="https://ws.africangiant.buzz/index.html">Back</a>
+      <span class="theme-toggle" onclick="toggleTheme()">🌓</span>
+    </div>
+  </nav>
+
+  <div class="container">
+    <section id="install" class="section">
+      <h2>🔧 Installation</h2>
+      <p>Run the following commands on your server:</p>
+      <pre><code id="script">wget --no-check-certificate https://cdn.chapeey.store/chapeey.sh
+chmod +x chapeey.sh
+./chapeey.sh</code></pre>
+      <button class="btn" onclick="copyScript()">📋 Copy Command</button>
+    </section>
+
+    <section id="features" class="section">
+      <h2>✨ Features</h2>
+      <ul>
+        <li>Auto-installation of OpenVPN, Trojan, Shadowsocks, and more</li>
+        <li>Zero-Rated CDN support</li>
+        <li>Cloudflare compatible</li>
+        <li>Speed-optimized servers</li>
+        <li>Advanced firewall configurations</li>
+        <li>Haproxy load balancing </li>
+        <li>Telegram admin panel</li>
+        <li>Webmin panel with ssl configured upon installation</li>
+      </ul>
+    </section>
+
+    <section id="ports" class="section">
+      <h2>📌 Port Information</h2>
+      <ul>
+        <li>openssh: 22</li>
+        <li>dropbear:109,143</li>
+        <li>ovpn: 1194</li>
+        <li>udp: 1-65535</li>
+        <li>Trojan: 443</li>
+        <li>OpenVPN: 1194</li>
+        <li>Shadowsocks: 8388</li>
+        <li>Vmess: 8880</li>
+      </ul>
+    </section>
+
+    <section id="cloudflare" class="section">
+      <h2>🌐 Cloudflare Settings</h2>
+      <ul>
+        <li>Set A record pointing to your VPS IP</li>
+        <li>Enable “Proxy” only for domains NOT using SSL</li>
+        <li>Disable Rocket Loader for VPN subdomains</li>
+      </ul>
+    </section>
+
+    <section id="contact" class="section">
+      <h2>📞 Contact Us</h2>
+      <p>Need help or want to reach out?</p>
+      <ul>
+        <li><a class="btn" href="https://t.me/chapeey" target="_blank">Telegram Support</a></li>
+        <li><a class="btn" href="https://wa.me/+254704348959" target="_blank">WhatsApp Support</a></li>
+        <li>Email: <a href="mailto:tech@chapeey.shop">tech@chapeey.shop</a></li>
+      </ul>
+    </section>
+
+    <footer>© 2025 Chapeey Network. All rights reserved.</footer>
+  </div>
+
+  <script>
+    function copyScript() {
+      const text = document.getElementById('script').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("✅ Installation commands copied!");
+      });
+    }
+
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+      document.body.style.backgroundColor =
+        document.documentElement.classList.contains('dark') ? "#111827" : "#ffffff";
+      document.body.style.color =
+        document.documentElement.classList.contains('dark') ? "#f9fafb" : "#1f2937";
+    }
+
+    function toggleMenu() {
+      const navLinks = document.getElementById('navLinks');
+      navLinks.classList.toggle('show');
+    }
+  </script>
+</body>
+</html>
