@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chapeey VPN Installer</title>
+  <meta name="description" content="Chapeey VPN Installer with support for OpenVPN, Trojan, Cloudflare CDN, and more." />
+  <meta name="author" content="Chapeey Network">
+  <meta name="theme-color" content="#111827" />
+  <link rel="icon" href="https://cdn.chapeey.store/favicon.png" type="image/png">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -15,6 +19,10 @@
       --card: #1f2937;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
       background-color: var(--bg-dark);
@@ -22,6 +30,7 @@
       margin: 0;
       padding: 0;
       line-height: 1.6;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     .container {
@@ -32,6 +41,7 @@
 
     h1, h2 {
       color: var(--primary);
+      transition: color 0.3s;
     }
 
     .section {
@@ -40,24 +50,25 @@
       padding: 1.5rem;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      transition: background-color 0.3s;
     }
 
     .btn {
-  background-color: var(--primary);
-  color: white;
-  padding: 0.6rem 1rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-top: 0.5rem;
-  display: inline-block;
-  text-decoration: none;
-  transition: background-color 0.3s ease;  /* smooth transition */
-}
+      background-color: var(--primary);
+      color: white;
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      display: inline-block;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
 
-.btn:hover {
-  background-color: #2563eb;
-}
+    .btn:hover {
+      background-color: #2563eb;
+    }
 
     code, pre {
       background-color: #0f172a;
@@ -78,6 +89,7 @@
       position: sticky;
       top: 0;
       z-index: 999;
+      transition: background-color 0.3s;
     }
 
     nav h1 {
@@ -102,10 +114,12 @@
       color: #cbd5e1;
       text-decoration: none;
       font-weight: 600;
+      transition: color 0.3s;
     }
 
     .theme-toggle {
       cursor: pointer;
+      font-size: 1.2rem;
     }
 
     footer {
@@ -113,6 +127,29 @@
       margin-top: 4rem;
       font-size: 0.9rem;
       color: #9ca3af;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #16a34a;
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      z-index: 9999;
+    }
+
+    @keyframes fadein {
+      from {opacity: 0; bottom: 0;}
+      to {opacity: 1; bottom: 20px;}
+    }
+
+    @keyframes fadeout {
+      from {opacity: 1;}
+      to {opacity: 0;}
     }
 
     @media (max-width: 768px) {
@@ -156,7 +193,7 @@
   <div class="container">
     <section id="install" class="section">
       <h2>🔧 Installation</h2>
-      <p>Run the following commands on your server:</p>
+      <p>Install this script on your server:</p>
       <pre><code id="script">wget --no-check-certificate https://cdn.chapeey.store/chapeey.sh
 chmod +x chapeey.sh
 ./chapeey.sh</code></pre>
@@ -171,23 +208,27 @@ chmod +x chapeey.sh
         <li>Cloudflare compatible</li>
         <li>Speed-optimized servers</li>
         <li>Advanced firewall configurations</li>
-        <li>Haproxy load balancing </li>
+        <li>Haproxy load balancing</li>
         <li>Telegram admin panel</li>
-        <li>Webmin panel with ssl configured upon installation</li>
+        <li>Webmin panel with SSL auto-config</li>
       </ul>
     </section>
 
     <section id="ports" class="section">
       <h2>📌 Port Information</h2>
       <ul>
-        <li>openssh: 22</li>
-        <li>dropbear:109,143</li>
-        <li>ovpn: 1194</li>
-        <li>udp: 1-65535</li>
-        <li>Trojan: 443</li>
-        <li>OpenVPN: 1194</li>
-        <li>Shadowsocks: 8388</li>
-        <li>Vmess: 8880</li>
+        <li>TROJAN WS 443</li>
+        <li>TROJAN GRPC 443</li>
+        <li>SHADOWSOCKS WS 443</li>
+        <li>SHADOWSOCKS GRPC 443</li>
+        <li>VLESS WS 443</li>
+        <li>VLESS GRPC 443</li>
+        <li>VLESS NONTLS 80</li>
+        <li>SSH WS / TLS 443</li>
+        <li>SSH NON TLS 8880/80/2082</li>
+        <li>OVPN SSL/TCP 1194</li>
+        <li>SLOWDNS 5300</li>
+        <li>UDP 1-65535</li>
       </ul>
     </section>
 
@@ -197,6 +238,9 @@ chmod +x chapeey.sh
         <li>Set A record pointing to your VPS IP</li>
         <li>Enable “Proxy” only for domains NOT using SSL</li>
         <li>Disable Rocket Loader for VPN subdomains</li>
+        <li>WebSocket : ON</li>
+        <li>Always Use HTTPS : OFF</li>
+        <li>Under Attack Mode : OFF</li>
       </ul>
     </section>
 
@@ -217,22 +261,53 @@ chmod +x chapeey.sh
     function copyScript() {
       const text = document.getElementById('script').innerText;
       navigator.clipboard.writeText(text).then(() => {
-        alert("✅ Installation commands copied!");
+        showToast("✅ Installation command copied!");
       });
     }
 
+    function showToast(message) {
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+
     function toggleTheme() {
-      document.documentElement.classList.toggle('dark');
-      document.body.style.backgroundColor =
-        document.documentElement.classList.contains('dark') ? "#111827" : "#ffffff";
-      document.body.style.color =
-        document.documentElement.classList.contains('dark') ? "#f9fafb" : "#1f2937";
+      const root = document.documentElement;
+      const dark = root.classList.toggle('dark');
+      localStorage.setItem("theme", dark ? "dark" : "light");
+      document.body.style.backgroundColor = dark ? "#111827" : "#ffffff";
+      document.body.style.color = dark ? "#f9fafb" : "#1f2937";
     }
 
     function toggleMenu() {
-      const navLinks = document.getElementById('navLinks');
-      navLinks.classList.toggle('show');
+      document.getElementById('navLinks').classList.toggle('show');
     }
+
+    window.onload = () => {
+      const theme = localStorage.getItem("theme");
+      if (theme === "light") {
+        document.documentElement.classList.remove("dark");
+        document.body.style.backgroundColor = "#ffffff";
+        document.body.style.color = "#1f2937";
+      }
+    };
+  </script>
+
+  <!-- Live Chat: Tawk.to (optional) -->
+  <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/65fbd9478d261e1b5f6b30c1/1ho3tdvkc';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+    })();
   </script>
 </body>
 </html>
